@@ -1,27 +1,32 @@
 #!/usr/bin/perl
-my $imd = exec 'docker images  --format "{{.ID}}: {{.CreatedSince}}"|grep -i days';
+#
+# @File docker mor.pl
+# @Author qubsup
+# @Created May 30, 2017 10:27:01 AM
+#
 
 
-my @imagesd = qw($imd);
-foreach $d (@imagesd){
-    
-   my $daily = $d[2];
-      if ($daily => 1){
-          
-          exec 'docker rmi $d[1]';
-          print "docker image $d[1] deleted";
+my $imd = qx/docker images  --format "{{.ID}}: {{.CreatedSince}}" | grep -i days/;
+
+
+foreach my $d (split(/\n/, $imd)){
+	my @words = split(' ', $d);
+   	my $daily = $words[1];
+      	if ($daily >= 0){
+          system("docker rmi -f $words[0]") == 0 or die('docker rmi failed');
+          print "docker image $words[0] deleted";
+        }  
+}
+
+
+my $imh = qx/docker images  --format "{{.ID}}: {{.CreatedSince}}" | grep -i hours/;
+
+foreach my $h (split(/\n/, $imh)){
+	my @words = split(' ', $h);
+	my $houry = $words[1];
+	if ($hourly >= 3){          
+          system("docker rmi -f $words[0]") == 0 or die('docker rmi failed');
+          print "docker image $words[0] deleted";
          }  
        
-    };
-my $imh = exec 'docker images  --format "{{.ID}}: {{.CreatedSince}}" |grep -i hours ';
-
-my @imagesh = qw($imh);
-foreach $h (@imagesh){
-    
-   my $houry = print "$h[3]";
-      if ($hourly => 1){
-          
-          exec 'docker rmi $h[1]';
-          print "docker image $h[1] deleted";
-         }         
-    };
+};
