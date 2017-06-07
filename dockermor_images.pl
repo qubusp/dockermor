@@ -12,7 +12,7 @@ my $imd = qx/docker images  --format "{{.ID}}: {{.CreatedSince}}" | grep -i days
 foreach my $d (split(/\n/, $imd)){
 	my @words = split(' ', $d);
    	my $daily = $words[1];
-      	if ($daily >= 0){
+      	if ($daily >= 1){
           system("docker rmi -f $words[0]") == 0 or die('docker rmi failed');
           print "docker image $words[0] deleted";
         }  
