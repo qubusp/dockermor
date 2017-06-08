@@ -25,7 +25,7 @@ W => "week",
 mo => "month",
 );
 GetOptions(\%im, 'im=s',
-%time,  'time=i'
+\%time,  'time=i'
 
 ) or die "Please " unless exists $im{};
 if ( $im == 'image' and defined $time not defined $imagename ){
